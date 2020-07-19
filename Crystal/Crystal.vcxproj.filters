@@ -16,10 +16,12 @@
     <ClInclude Include="src\Crystal\EntryPoint.h">
       <Filter>Crystal</Filter>
     </ClInclude>
+    <ClInclude Include="src\Crystal\Log.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Crystal\Application.cpp">
       <Filter>Crystal</Filter>
     </ClCompile>
+    <ClCompile Include="src\Crystal\Log.cpp" />
   </ItemGroup>
 </Project>
