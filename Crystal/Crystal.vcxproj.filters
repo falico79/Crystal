@@ -34,12 +34,16 @@
     <ClInclude Include="src\Crystal\Log.h">
       <Filter>Crystal</Filter>
     </ClInclude>
+    <ClInclude Include="src\crystalpch.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Crystal\Application.cpp">
       <Filter>Crystal</Filter>
     </ClCompile>
     <ClCompile Include="src\Crystal\Log.cpp">
+      <Filter>Crystal</Filter>
+    </ClCompile>
+    <ClCompile Include="src\crystalpch.cpp">
       <Filter>Crystal</Filter>
     </ClCompile>
   </ItemGroup>

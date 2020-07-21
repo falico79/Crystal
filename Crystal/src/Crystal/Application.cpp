@@ -1,3 +1,5 @@
+#include "crystalpch.h"
+
 #include "Application.h"
 
 #include "Crystal/Events/ApplicationEvent.h"
