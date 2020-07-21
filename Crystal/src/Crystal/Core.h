@@ -6,4 +6,8 @@
 	#else
 		#define CRYSTAL_API __declspec(dllimport)
 	#endif 
+#else
+	#error Crystal only supports Windows!
 #endif
+
+#define BIT(x) (1 << x)

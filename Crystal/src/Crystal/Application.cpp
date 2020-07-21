@@ -1,5 +1,8 @@
 #include "Application.h"
 
+#include "Crystal/Events/ApplicationEvent.h"
+#include "Crystal/Log.h"
+
 namespace Crystal {
 
 	Application::Application()
@@ -12,6 +15,9 @@ namespace Crystal {
 
 	void Application::Run()
 	{
+		WindowResizeEvent e(1280, 720);
+		CRYSTAL_CORE_TRACE(e);
+
 		while (true);
 	}
 
