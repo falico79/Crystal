@@ -10,6 +10,12 @@ workspace "Crystal"
 
 outputdir = "%{cfg.buildcfg}-%{cfg.system}-%{cfg.architecture}"
 
+-- Include directories relative to root folder (solution directory)
+Includedir = {}
+Includedir["GLFW"] = "Crystal/vendor/GLFW/include"
+
+include "Crystal/vendor/GLFW"
+
 project "Crystal"
 	location "Crystal"
 	kind "SharedLib"
@@ -30,7 +36,14 @@ project "Crystal"
 	includedirs
 	{
 		"%{prj.name}/src",
-		"%{prj.name}/vendor/spdlog/include"
+		"%{prj.name}/vendor/spdlog/include",
+		"%{Includedir.GLFW}"
+	}
+
+	links
+	{
+		"GLFW",
+		"opengl32.lib"
 	}
 
 	filter "system:windows"
@@ -41,7 +54,8 @@ project "Crystal"
 		defines
 		{
 			"CRYSTAL_PLATFORM_WINDOWS",
-			"CRYSTAL_BUILD_DLL"
+			"CRYSTAL_BUILD_DLL",
+			"CRYSTAL_ENABLE_ASSERTS"
 		}
 
 		postbuildcommands

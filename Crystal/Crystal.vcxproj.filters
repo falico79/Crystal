@@ -7,6 +7,12 @@
     <Filter Include="Crystal\Events">
       <UniqueIdentifier>{8BE85F61-77B6-5367-604A-C48D4CB72FCC}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Crystal\Platform">
+      <UniqueIdentifier>{BB3E1A55-A737-39A7-D069-1E2CBCC118B3}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Crystal\Platform\Windows">
+      <UniqueIdentifier>{F5736C8F-E198-BB0F-0AE4-A09FF667BA2D}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\Crystal.h" />
@@ -34,6 +40,12 @@
     <ClInclude Include="src\Crystal\Log.h">
       <Filter>Crystal</Filter>
     </ClInclude>
+    <ClInclude Include="src\Crystal\Platform\Windows\WindowsWindow.h">
+      <Filter>Crystal\Platform\Windows</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Crystal\Window.h">
+      <Filter>Crystal</Filter>
+    </ClInclude>
     <ClInclude Include="src\crystalpch.h" />
   </ItemGroup>
   <ItemGroup>
@@ -43,8 +55,9 @@
     <ClCompile Include="src\Crystal\Log.cpp">
       <Filter>Crystal</Filter>
     </ClCompile>
-    <ClCompile Include="src\crystalpch.cpp">
-      <Filter>Crystal</Filter>
+    <ClCompile Include="src\Crystal\Platform\Windows\WindowsWindow.cpp">
+      <Filter>Crystal\Platform\Windows</Filter>
     </ClCompile>
+    <ClCompile Include="src\crystalpch.cpp" />
   </ItemGroup>
 </Project>
