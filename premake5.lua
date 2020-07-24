@@ -14,9 +14,11 @@ outputdir = "%{cfg.buildcfg}-%{cfg.system}-%{cfg.architecture}"
 Includedir = {}
 Includedir["GLFW"] = "Crystal/vendor/GLFW/include"
 Includedir["Glad"] = "Crystal/vendor/Glad/include"
+Includedir["ImGui"] = "Crystal/vendor/imgui"
 
 include "Crystal/vendor/GLFW"
 include "Crystal/vendor/Glad"
+include "Crystal/vendor/Imgui"
 
 project "Crystal"
 	location "Crystal"
@@ -40,13 +42,15 @@ project "Crystal"
 		"%{prj.name}/src",
 		"%{prj.name}/vendor/spdlog/include",
 		"%{Includedir.GLFW}",
-		"%{Includedir.Glad}"
+		"%{Includedir.Glad}",
+		"%{Includedir.ImGui}"
 	}
 
 	links
 	{
 		"GLFW",
 		"Glad",
+		"ImGui",
 		"opengl32.lib"
 	}
 

@@ -4,3 +4,6 @@
 [submodule "Crystal/vendor/GLFW"]
 	path = Crystal/vendor/GLFW
 	url = https://github.com/TheCherno/glfw
+[submodule "Crystal/vendor/imgui"]
+	path = Crystal/vendor/imgui
+	url = https://github.com/TheCherno/imgui
