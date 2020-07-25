@@ -37,10 +37,10 @@ namespace Crystal {
 		MouseScrolledEvent(float xOffset, float yOffset) 
 			: m_XOffset(xOffset), m_YOffset(yOffset) {}
 
-		inline float getXOffset() const {
+		inline float GetXOffset() const {
 			return m_XOffset;
 		}
-		inline float getYOffset() const {
+		inline float GetYOffset() const {
 			return m_YOffset;
 		}
 
