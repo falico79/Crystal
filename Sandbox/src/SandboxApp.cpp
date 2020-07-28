@@ -11,12 +11,15 @@ public:
 
 	void OnUpdate() override
 	{
-		CRYSTAL_CLIENT_INFO("ExampleLayer::Update");
+		//CRYSTAL_CLIENT_INFO("ExampleLayer::Update");
+
+		if (Crystal::Input::IsKeyPressed(CRYSTAL_KEY_TAB))
+			CRYSTAL_CLIENT_INFO("Tab key is pressed!");
 	}
 
 	void OnEvent(Crystal::Event& event) override
 	{
-		CRYSTAL_CLIENT_TRACE("{0}", event);
+		//CRYSTAL_CLIENT_TRACE("{0}", event);
 	}
 };
 
