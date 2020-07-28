@@ -16,6 +16,7 @@ Includedir = {}
 Includedir["GLFW"] = "Crystal/vendor/GLFW/include"
 Includedir["Glad"] = "Crystal/vendor/Glad/include"
 Includedir["ImGui"] = "Crystal/vendor/imgui"
+Includedir["glm"] = "Crystal/vendor/glm"
 
 include "Crystal/vendor/GLFW"
 include "Crystal/vendor/Glad"
@@ -36,7 +37,9 @@ project "Crystal"
 	files
 	{
 		"%{prj.name}/src/**.h",
-		"%{prj.name}/src/**.cpp"
+		"%{prj.name}/src/**.cpp",
+		"%{prj.name}/vendor/glm/glm/**.hpp",
+		"%{prj.name}/vendor/glm/glm/**.inl"
 	}
 
 	includedirs
@@ -45,7 +48,8 @@ project "Crystal"
 		"%{prj.name}/vendor/spdlog/include",
 		"%{Includedir.GLFW}",
 		"%{Includedir.Glad}",
-		"%{Includedir.ImGui}"
+		"%{Includedir.ImGui}",
+		"%{Includedir.glm}"
 	}
 
 	links
@@ -105,7 +109,8 @@ project "Sandbox"
 	includedirs
 	{
 		"Crystal/vendor/spdlog/include",
-		"Crystal/src"
+		"Crystal/src",
+		"Crystal/vendor/glm"
 	}
 
 	links

@@ -7,3 +7,6 @@
 [submodule "Crystal/vendor/imgui"]
 	path = Crystal/vendor/imgui
 	url = https://github.com/TheCherno/imgui
+[submodule "Crystal\\vendor\\glm"]
+	path = Crystal\\vendor\\glm
+	url = https://github.com/g-truc/glm
