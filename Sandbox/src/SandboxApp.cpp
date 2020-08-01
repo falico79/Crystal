@@ -29,7 +29,6 @@ public:
 	Sandbox()
 	{
 		PushLayer(new ExampleLayer());
-		PushOverlay(new Crystal::ImGuiLayer());
 	}
 
 	~Sandbox() 

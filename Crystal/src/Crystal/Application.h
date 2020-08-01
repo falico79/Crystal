@@ -7,6 +7,7 @@
 #include "Events/Event.h"
 #include "Crystal/Events/ApplicationEvent.h"
 
+#include "Crystal/ImGui/ImGuiLayer.h"
 
 namespace Crystal {
 
@@ -29,6 +30,7 @@ namespace Crystal {
 		bool OnWindowClose(WindowCloseEvent& e);
 
 		std::unique_ptr<Window> m_Window;
+		ImGuiLayer* m_ImGuiLayer;
 		bool m_running = true;
 		LayerStack m_LayerStack;
 	private:

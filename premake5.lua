@@ -110,6 +110,7 @@ project "Sandbox"
 	{
 		"Crystal/vendor/spdlog/include",
 		"Crystal/src",
+		"Crystal/vendor",
 		"Crystal/vendor/glm"
 	}
 
