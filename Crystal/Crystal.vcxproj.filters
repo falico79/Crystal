@@ -1326,6 +1326,9 @@
     <ClInclude Include="src\Crystal\Renderer\GraphicsContext.h" />
     <ClInclude Include="src\Platform\OpenGL\OpenGLContext.h" />
     <ClInclude Include="src\Crystal\Renderer\Shader.h" />
+    <ClInclude Include="src\Crystal\Renderer\Buffer.h" />
+    <ClInclude Include="src\Platform\OpenGL\OpenGLBuffer.h" />
+    <ClInclude Include="src\Crystal\Renderer\Renderer.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Crystal\Application.cpp">
@@ -1357,5 +1360,8 @@
     </ClCompile>
     <ClCompile Include="src\Platform\OpenGL\OpenGLContext.cpp" />
     <ClCompile Include="src\Crystal\Renderer\Shader.cpp" />
+    <ClCompile Include="src\Crystal\Renderer\Buffer.cpp" />
+    <ClCompile Include="src\Platform\OpenGL\OpenGLBuffer.cpp" />
+    <ClCompile Include="src\Crystal\Renderer\Renderer.cpp" />
   </ItemGroup>
 </Project>
