@@ -12,6 +12,15 @@
 
 #include "Crystal/ImGui/ImGuiLayer.h"
 
+#include "Crystal/Renderer/Renderer.h"
+#include "Crystal/Renderer/RenderCommand.h"
+
+#include "Crystal/Renderer/Buffer.h"
+#include "Crystal/Renderer/Shader.h"
+#include "Crystal/Renderer/VertexArray.h"
+
+#include "Crystal/Renderer/OrthographicCamera.h"
+
 // ---Entry Point------------------
 #include "Crystal/EntryPoint.h"
 // --------------------------------
