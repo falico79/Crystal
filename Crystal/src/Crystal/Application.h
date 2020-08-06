@@ -9,11 +9,7 @@
 
 #include "Crystal/ImGui/ImGuiLayer.h"
 
-#include "Crystal/Renderer/Shader.h"
-#include "Crystal/Renderer/Buffer.h"
-#include "Crystal/Renderer/VertexArray.h"
-
-#include "Crystal/Renderer/OrthographicCamera.h"
+#include "Crystal/Core/Timestep.h"
 
 namespace Crystal {
 
@@ -39,7 +35,7 @@ namespace Crystal {
 		ImGuiLayer* m_ImGuiLayer;
 		bool m_running = true;
 		LayerStack m_LayerStack;
-
+		float m_LastFrameTime = 0.0f;
 
 	private:
 		static Application* s_Instance;

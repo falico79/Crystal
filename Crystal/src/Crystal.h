@@ -6,6 +6,8 @@
 #include "Crystal/Layer.h"
 #include "Crystal/Log.h"
 
+#include "Crystal/Core/Timestep.h"
+
 #include "Crystal/Input.h"
 #include "Crystal/KeyCodes.h"
 #include "Crystal/MouseButtonCodes.h"

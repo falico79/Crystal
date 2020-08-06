@@ -143,6 +143,7 @@
     <ClInclude Include="src\Crystal.h" />
     <ClInclude Include="src\Crystal\Application.h" />
     <ClInclude Include="src\Crystal\Core.h" />
+    <ClInclude Include="src\Crystal\Core\Timestep.h" />
     <ClInclude Include="src\Crystal\EntryPoint.h" />
     <ClInclude Include="src\Crystal\Events\ApplicationEvent.h" />
     <ClInclude Include="src\Crystal\Events\Event.h" />

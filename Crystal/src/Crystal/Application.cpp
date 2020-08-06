@@ -4,9 +4,7 @@
 #include "Crystal/Log.h"
 
 #include "Input.h"
-
-#include "Renderer/Renderer.h"
-
+#include <GLFW/glfw3.h>
 
 namespace Crystal {
 
@@ -64,8 +62,12 @@ namespace Crystal {
 		while (m_running)
 		{
 
+			float time = glfwGetTime();
+			Timestep timestep = time - m_LastFrameTime;
+			m_LastFrameTime = time;
+
 			for (Layer* layer : m_LayerStack)
-				layer->OnUpdate();
+				layer->OnUpdate(timestep);
 
 			m_ImGuiLayer->Begin();
 			for (Layer* layer : m_LayerStack)
