@@ -13,6 +13,8 @@
 #include "Crystal/Renderer/Buffer.h"
 #include "Crystal/Renderer/VertexArray.h"
 
+#include "Crystal/Renderer/OrthographicCamera.h"
+
 namespace Crystal {
 
 	class CRYSTAL_API Application
@@ -43,6 +45,9 @@ namespace Crystal {
 
 		std::shared_ptr<Shader> m_BlueSquareShader;
 		std::shared_ptr<VertexArray> m_SquareVA;
+
+		OrthographicCamera m_Camera;
+
 	private:
 		static Application* s_Instance;
 	};
