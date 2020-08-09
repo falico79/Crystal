@@ -17,6 +17,7 @@ Includedir["GLFW"] = "Crystal/vendor/GLFW/include"
 Includedir["Glad"] = "Crystal/vendor/Glad/include"
 Includedir["ImGui"] = "Crystal/vendor/imgui"
 Includedir["glm"] = "Crystal/vendor/glm"
+Includedir["stb_image"] = "Crystal/vendor/stb_image"
 
 include "Crystal/vendor/GLFW"
 include "Crystal/vendor/Glad"
@@ -39,6 +40,8 @@ project "Crystal"
 	{
 		"%{prj.name}/src/**.h",
 		"%{prj.name}/src/**.cpp",
+		"%{prj.name}/vendor/stb_image/**.cpp",
+		"%{prj.name}/vendor/stb_image/**.h",
 		"%{prj.name}/vendor/glm/glm/**.hpp",
 		"%{prj.name}/vendor/glm/glm/**.inl"
 	}
@@ -55,6 +58,7 @@ project "Crystal"
 		"%{Includedir.GLFW}",
 		"%{Includedir.Glad}",
 		"%{Includedir.ImGui}",
+		"%{Includedir.stb_image}",
 		"%{Includedir.glm}"
 	}
 
