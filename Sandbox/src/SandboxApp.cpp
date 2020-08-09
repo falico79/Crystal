@@ -2,6 +2,10 @@
 #include <Crystal.h>
 #include <glm/gtc/matrix_transform.hpp>
 
+#include "Platform/OpenGL/OpenGLShader.h"
+#include <imgui/imgui.h>
+#include <glm\glm\gtc\type_ptr.hpp>
+
 class ExampleLayer : public Crystal::Layer
 {
 public:
@@ -89,9 +93,9 @@ public:
 
 		)";
 
-		m_Shader.reset(new Crystal::Shader(vertexSrc, fragmentSrc));
+		m_Shader.reset(Crystal::Shader::Create(vertexSrc, fragmentSrc));
 
-		std::string squareVertexSrc = R"(
+		std::string flatColorShaderVertexSrc = R"(
 			#version 330 core
 			
 			layout(location = 0) in vec3 a_Position;
@@ -109,21 +113,23 @@ public:
 			}
 
 		)";
-		std::string squareFragmentSrc = R"(
+		std::string flatColorShaderFragmentSrc = R"(
 			#version 330 core
 			
 			layout(location = 0) out vec4 color;
 
 			in vec3 v_Position;
 
+			uniform vec3 u_Color;
+
 			void main ()
 			{
-				color = vec4(0.2, 0.3, 0.8, 1.0);
+				color = vec4(u_Color, 1.0);
 			}
 
 		)";
 
-		m_BlueSquareShader.reset(new Crystal::Shader(squareVertexSrc, squareFragmentSrc));
+		m_FlatColorShader.reset(Crystal::Shader::Create(flatColorShaderVertexSrc, flatColorShaderFragmentSrc));
 
 	}
 
@@ -154,8 +160,6 @@ public:
 			m_CameraRotation -= m_CameraRotationSpeed * ts;
 		}
 
-
-
 		Crystal::RenderCommand::SetClearColor({ 0.1f, 0.1f, 0.1f, 1 });
 		Crystal::RenderCommand::Clear();
 
@@ -164,21 +168,31 @@ public:
 
 		Crystal::Renderer::BeginScene(m_Camera);
 
-		static glm::mat4 scale = glm::scale(glm::mat4(1.0f), glm::vec3(0.1f));
+		glm::mat4 scale = glm::scale(glm::mat4(1.0f), glm::vec3(0.1f));
 
+		std::dynamic_pointer_cast<Crystal::OpenGLShader>(m_FlatColorShader)->Bind();
+		std::dynamic_pointer_cast<Crystal::OpenGLShader>(m_FlatColorShader)->UploadUniformFloat3("u_Color", m_SquareColor);
 		for (int y = 0; y < 20; y++)
 		{
 			for (int x = 0; x < 20; x++)
 			{
 				glm::vec3 pos(x * 0.11f, y * 0.11f, 0.0f);
 				glm::mat4 transform = glm::translate(glm::mat4(1.0f), pos) * scale;
-				Crystal::Renderer::Submit(m_BlueSquareShader, m_SquareVA, transform);
+
+				Crystal::Renderer::Submit(m_FlatColorShader, m_SquareVA, transform);
 			}
 		}
 		Crystal::Renderer::Submit(m_Shader, m_VertexArray);
 
 		Crystal::Renderer::EndScene();
 
+	}
+
+	virtual void OnImGuiRenderer() override 
+	{
+		ImGui::Begin("Settings");
+		ImGui::ColorEdit3("Square Color", glm::value_ptr(m_SquareColor));
+		ImGui::End();
 	}
 
 	void OnEvent(Crystal::Event& event) override
@@ -190,7 +204,7 @@ private:
 	std::shared_ptr<Crystal::Shader> m_Shader;
 	std::shared_ptr<Crystal::VertexArray> m_VertexArray;
 
-	std::shared_ptr<Crystal::Shader> m_BlueSquareShader;
+	std::shared_ptr<Crystal::Shader> m_FlatColorShader;
 	std::shared_ptr<Crystal::VertexArray> m_SquareVA;
 
 	Crystal::OrthographicCamera m_Camera;
@@ -199,6 +213,8 @@ private:
 
 	float m_CameraRotation = 0.0f;
 	float m_CameraRotationSpeed = 180.0f;
+
+	glm::vec3 m_SquareColor = { 0.2f, 0.3f, 0.8f };
 };
 
 
