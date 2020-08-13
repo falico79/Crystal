@@ -24,7 +24,3 @@
 #include "Crystal/Renderer/VertexArray.h"
 
 #include "Crystal/Renderer/OrthographicCamera.h"
-
-// ---Entry Point------------------
-#include "Crystal/Core/EntryPoint.h"
-// --------------------------------

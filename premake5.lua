@@ -75,7 +75,6 @@ project "Crystal"
 
 		defines
 		{
-			"CRYSTAL_PLATFORM_WINDOWS",
 			"CRYSTAL_BUILD_DLL",
 			"GLFW_INCLUDE_NONE"
 		}
@@ -126,11 +125,6 @@ project "Sandbox"
 
 	filter "system:windows"
 		systemversion "latest"
-
-		defines
-		{
-			"CRYSTAL_PLATFORM_WINDOWS"
-		}
 
 	filter "configurations:Debug"
 		defines "CRYSTAL_DEBUG"
