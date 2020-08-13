@@ -1,8 +1,8 @@
 #include "crystalpch.h"
 #include "OrthographicCameraController.h"
 
-#include "Crystal/Input.h"
-#include "Crystal/KeyCodes.h"
+#include "Crystal/Core/Input.h"
+#include "Crystal/Core/KeyCodes.h"
 
 namespace Crystal {
 

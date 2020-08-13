@@ -3,8 +3,8 @@
 #include "Core.h"
 
 #include "Window.h"
-#include "Crystal/LayerStack.h"
-#include "Events/Event.h"
+#include "Crystal/Core/LayerStack.h"
+#include "Crystal/Events/Event.h"
 #include "Crystal/Events/ApplicationEvent.h"
 
 #include "Crystal/ImGui/ImGuiLayer.h"

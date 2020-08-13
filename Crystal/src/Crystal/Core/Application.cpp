@@ -1,10 +1,10 @@
 #include "crystalpch.h"
 #include "Application.h"
 
-#include "Crystal/Log.h"
+#include "Crystal/Core/Log.h"
 
 #include "Input.h"
-#include "Renderer/Renderer.h"
+#include "Crystal/Renderer/Renderer.h"
 
 #include <GLFW/glfw3.h>
 

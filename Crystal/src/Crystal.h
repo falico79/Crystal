@@ -2,16 +2,16 @@
 
 // For use by Crystal applications
 
-#include "Crystal/Application.h"
-#include "Crystal/Layer.h"
-#include "Crystal/Log.h"
+#include "Crystal/Core/Application.h"
+#include "Crystal/Core/Layer.h"
+#include "Crystal/Core/Log.h"
 
 #include "Crystal/Core/Timestep.h"
 
-#include "Crystal/Input.h"
-#include "Crystal/KeyCodes.h"
-#include "Crystal/MouseButtonCodes.h"
-#include "Crystal/OrthographicCameraController.h"
+#include "Crystal/Core/Input.h"
+#include "Crystal/Core/KeyCodes.h"
+#include "Crystal/Core/MouseButtonCodes.h"
+#include "Crystal/Renderer/OrthographicCameraController.h"
 
 #include "Crystal/ImGui/ImGuiLayer.h"
 
@@ -26,5 +26,5 @@
 #include "Crystal/Renderer/OrthographicCamera.h"
 
 // ---Entry Point------------------
-#include "Crystal/EntryPoint.h"
+#include "Crystal/Core/EntryPoint.h"
 // --------------------------------
