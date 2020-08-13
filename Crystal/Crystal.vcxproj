@@ -156,6 +156,7 @@
     <ClInclude Include="src\Crystal\LayerStack.h" />
     <ClInclude Include="src\Crystal\Log.h" />
     <ClInclude Include="src\Crystal\MouseButtonCodes.h" />
+    <ClInclude Include="src\Crystal\OrthographicCameraController.h" />
     <ClInclude Include="src\Crystal\Renderer\Buffer.h" />
     <ClInclude Include="src\Crystal\Renderer\GraphicsContext.h" />
     <ClInclude Include="src\Crystal\Renderer\OrthographicCamera.h" />
@@ -592,6 +593,7 @@
     <ClCompile Include="src\Crystal\Layer.cpp" />
     <ClCompile Include="src\Crystal\LayerStack.cpp" />
     <ClCompile Include="src\Crystal\Log.cpp" />
+    <ClCompile Include="src\Crystal\OrthographicCameraController.cpp" />
     <ClCompile Include="src\Crystal\Renderer\Buffer.cpp" />
     <ClCompile Include="src\Crystal\Renderer\OrthographicCamera.cpp" />
     <ClCompile Include="src\Crystal\Renderer\RenderCommand.cpp" />
