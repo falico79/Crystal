@@ -12,7 +12,7 @@ Sandbox2D::Sandbox2D()
 
 void Sandbox2D::OnAttach()
 {
-
+	m_CheckerboardTexture = Crystal::Texture2D::Create("assets/textures/Checkerboard.png");
 }
 
 void Sandbox2D::OnDetach()
@@ -29,11 +29,8 @@ void Sandbox2D::OnUpdate(Crystal::Timestep ts)
 	Crystal::Renderer2D::BeginScene(m_CameraController.GetCamera());
 	Crystal::Renderer2D::DrawQuad({ -1.0f, 0.0f }, { 0.8f, 0.8f }, m_SquareColor);
 	Crystal::Renderer2D::DrawQuad({ 0.5f, -0.5f }, { 0.5f, 0.75f }, { m_SquareColor.b, m_SquareColor.g, m_SquareColor.r, 1.0f });
+	Crystal::Renderer2D::DrawQuad({ 0.0f, 0.0f, -0.1f }, { 10.0f, 10.0f }, m_CheckerboardTexture);
 	Crystal::Renderer2D::EndScene();
-
-	// TODO: Add these functions - Shader::SetMat4, Shader::SetFloat4
-	// std::dynamic_pointer_cast<Crystal::OpenGLShader>(m_FlatColorShader)->Bind();
-	// std::dynamic_pointer_cast<Crystal::OpenGLShader>(m_FlatColorShader)->UploadUniformFloat4("u_Color", m_SquareColor);
 
 }
 
