@@ -1,4 +1,5 @@
 #pragma once
+#include "Crystal/Core/Core.h"
 
 #ifdef CRYSTAL_PLATFORM_WINDOWS
 
@@ -7,12 +8,18 @@ extern Crystal::Application* Crystal::CreateApplication();
 int main(int argc, char** argv)
 {
 	Crystal::Log::Init();
-	CRYSTAL_CORE_WARN("Initialized Log!");
-	CRYSTAL_CLIENT_INFO("Hello!");
 
+	CRYSTAL_PROFILE_BEGIN_SESSION("Startup", "CrystalProfile-Startup.json");
 	auto app = Crystal::CreateApplication();
+	CRYSTAL_PROFILE_END_SESSION();
+
+	CRYSTAL_PROFILE_BEGIN_SESSION("Runtime", "CrystalProfile-Runtime.json");
 	app->Run();
+	CRYSTAL_PROFILE_END_SESSION();
+
+	CRYSTAL_PROFILE_BEGIN_SESSION("Shutdown", "CrystalProfile-Shutdown.json");
 	delete app;
+	CRYSTAL_PROFILE_END_SESSION();
 }
 
 #endif

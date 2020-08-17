@@ -3,6 +3,9 @@
 !vendor/bin/premake/
 bin-int/
 
+Sandbox/CrystalProfile-Runtime.json
+Sandbox/CrystalProfile-Startup.json
+Sandbox/CrystalProfile-Shutdown.json
 # Visual Studio files and forders
 .vs/
 **.sln
