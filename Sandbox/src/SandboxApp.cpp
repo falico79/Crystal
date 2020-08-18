@@ -23,8 +23,7 @@ public:
 			 0.5f, -0.5f, 0.0f, 0.2f, 0.3f, 0.8f, 1.0f,
 			 0.0f,  0.5f, 0.0f, 0.8f, 0.8f, 0.2f, 1.0f
 		};
-		Crystal::Ref<Crystal::VertexBuffer> vertexBuffer;
-		vertexBuffer.reset(Crystal::VertexBuffer::Create(vertices, sizeof(vertices)));
+		Crystal::Ref<Crystal::VertexBuffer> vertexBuffer = Crystal::VertexBuffer::Create(vertices, sizeof(vertices));
 
 		Crystal::BufferLayout layout = {
 			{ Crystal::ShaderDataType::Float3, "a_Position" },
@@ -36,8 +35,7 @@ public:
 
 
 		uint32_t indices[3] = { 0, 1, 2 };
-		Crystal::Ref<Crystal::IndexBuffer> indexBuffer;
-		indexBuffer.reset(Crystal::IndexBuffer::Create(indices, sizeof(indices) / sizeof(uint32_t)));
+		Crystal::Ref<Crystal::IndexBuffer> indexBuffer = Crystal::IndexBuffer::Create(indices, sizeof(indices) / sizeof(uint32_t));
 		m_VertexArray->SetIndexBuffer(indexBuffer);
 
 		m_SquareVA = Crystal::VertexArray::Create();
@@ -48,8 +46,7 @@ public:
 			 0.5f,  0.5f, 0.0f, 1.0f, 1.0f,
 			-0.5f,  0.5f, 0.0f, 0.0f, 1.0f
 		};
-		Crystal::Ref<Crystal::VertexBuffer> squareVB;
-		squareVB.reset(Crystal::VertexBuffer::Create(square, sizeof(square)));
+		Crystal::Ref<Crystal::VertexBuffer> squareVB = Crystal::VertexBuffer::Create(square, sizeof(square));
 
 		squareVB->SetLayout({
 			{ Crystal::ShaderDataType::Float3, "a_Position" },
@@ -58,8 +55,7 @@ public:
 		m_SquareVA->AddVertexBuffer(squareVB);
 
 		uint32_t squareIndices[6] = { 0, 1, 2, 2, 3, 0 };
-		Crystal::Ref<Crystal::IndexBuffer> squareIB;
-		squareIB.reset(Crystal::IndexBuffer::Create(squareIndices, sizeof(squareIndices) / sizeof(uint32_t)));
+		Crystal::Ref<Crystal::IndexBuffer> squareIB = Crystal::IndexBuffer::Create(squareIndices, sizeof(squareIndices) / sizeof(uint32_t));
 		m_SquareVA->SetIndexBuffer(squareIB);
 
 		std::string vertexSrc = R"(
