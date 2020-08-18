@@ -41,9 +41,9 @@ void Sandbox2D::OnUpdate(Crystal::Timestep ts)
 	{
 		CRYSTAL_PROFILE_SCOPE("Render Draw");
 		Crystal::Renderer2D::BeginScene(m_CameraController.GetCamera());
-		Crystal::Renderer2D::DrawQuad({ -1.0f, 0.0f }, { 0.8f, 0.8f }, m_SquareColor);
+		Crystal::Renderer2D::DrawRotatedQuad({ -1.0f, 0.0f }, { 0.8f, 0.8f }, glm::radians(-45.0f), m_SquareColor);
 		Crystal::Renderer2D::DrawQuad({ 0.5f, -0.5f }, { 0.5f, 0.75f }, { m_SquareColor.b, m_SquareColor.g, m_SquareColor.r, 1.0f });
-		Crystal::Renderer2D::DrawQuad({ 0.0f, 0.0f, -0.1f }, { 10.0f, 10.0f }, m_CheckerboardTexture);
+		Crystal::Renderer2D::DrawQuad({ 0.0f, 0.0f, -0.1f }, { 10.0f, 10.0f }, m_CheckerboardTexture, 10.0f);
 		Crystal::Renderer2D::EndScene();
 	}
 }
@@ -53,15 +53,6 @@ void Sandbox2D::OnImGuiRenderer()
 	ImGui::Begin("Settings");
 	ImGui::ColorEdit4("Square Color", glm::value_ptr(m_SquareColor));
 
-//	for (auto& result : m_ProfileResults)
-//	{
-//		char label[50];
-//		strcpy(label, result.Name);
-//		strcat(label, " %.3fsm");
-//		ImGui::Text(label, result.Time);
-//	}
-//	m_ProfileResults.clear();
-//
 	ImGui::End();
 }
 
