@@ -32,6 +32,7 @@ void Sandbox2D::OnUpdate(Crystal::Timestep ts)
 	m_CameraController.OnUpdate(ts);
 
 	// Render
+	Crystal::Renderer2D::ResetStats();
 	{
 		CRYSTAL_PROFILE_SCOPE("Render Prep");
 		Crystal::RenderCommand::SetClearColor({ 0.1f, 0.1f, 0.1f, 1 });
@@ -56,6 +57,15 @@ void Sandbox2D::OnUpdate(Crystal::Timestep ts)
 void Sandbox2D::OnImGuiRenderer()
 {
 	ImGui::Begin("Settings");
+
+	auto stats = Crystal::Renderer2D::GetStats();
+	ImGui::Text("Renderer2D Stats:");
+	ImGui::Text("Draw Calls: %d", stats.DrawCalls);
+	ImGui::Text("Quads: %d", stats.QuadCount);
+	ImGui::Text("Vertices: %d", stats.GetTotalVertexCount());
+	ImGui::Text("Indices: %d", stats.GetTotalIndexCount());
+
+
 	ImGui::ColorEdit4("Square Color", glm::value_ptr(m_SquareColor));
 
 	ImGui::End();
