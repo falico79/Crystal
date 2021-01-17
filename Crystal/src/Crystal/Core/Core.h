@@ -48,9 +48,9 @@
 #ifdef CRYSTAL_PLATFORM_WINDOWS
 	#if CRYSTAL_DYNAMIC_LINK
 		#ifdef CRYSTAL_BUILD_DLL
-			#define HAZEL_API __declspec(dllexport)
+			#define CRYSTAL_API __declspec(dllexport)
 		#else
-			#define HAZEL_API __declspec(dllimport)
+			#define CRYSTAL_API __declspec(dllimport)
 		#endif
 	#else
 	#define CRYSTAL_API
