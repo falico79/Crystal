@@ -4,7 +4,6 @@
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/glm/gtc/type_ptr.hpp>
 
-#include "Crystal/Debug/Instrumentor.h"
 
 Sandbox2D::Sandbox2D()
 	: Layer("Sandbox2D"), m_CameraController(1280.0f / 720.0f), m_SquareColor({ 0.2f, 0.3f, 0.8, 1.0f })
@@ -17,19 +16,6 @@ void Sandbox2D::OnAttach()
 
 	m_CheckerboardTexture = Crystal::Texture2D::Create("assets/textures/Checkerboard.png");
 
-	Crystal::FramebufferSpecification fbSpec;
-	fbSpec.Width = 1280;
-	fbSpec.Height = 720;
-	m_Framebuffer = Crystal::Framebuffer::Create(fbSpec);
-
-	// Init here
-	m_Particle.ColorBegin = { 254 / 255.0f, 212 / 255.0f, 123 / 255.0f, 1.0f };
-	m_Particle.ColorEnd = { 254 / 255.0f, 109 / 255.0f, 41 / 255.0f, 1.0f };
-	m_Particle.SizeBegin = 0.5f, m_Particle.SizeVariation = 0.3f, m_Particle.SizeEnd = 0.0f;
-	m_Particle.LifeTime = 1.0f;
-	m_Particle.Velocity = { 0.0f, 0.0f };
-	m_Particle.VelocityVariation = { 3.0f, 1.0f };
-	m_Particle.Position = { 0.0f, 0.0f };
 }
 
 void Sandbox2D::OnDetach()
@@ -49,7 +35,6 @@ void Sandbox2D::OnUpdate(Crystal::Timestep ts)
 	Crystal::Renderer2D::ResetStats();
 	{
 		CRYSTAL_PROFILE_SCOPE("Render Prep");
-		m_Framebuffer->Bind();
 		Crystal::RenderCommand::SetClearColor({ 0.1f, 0.1f, 0.1f, 1 });
 		Crystal::RenderCommand::Clear();
 	}
@@ -75,115 +60,24 @@ void Sandbox2D::OnUpdate(Crystal::Timestep ts)
 			}
 		}
 		Crystal::Renderer2D::EndScene();
-		m_Framebuffer->Unbind();
 	}
-
-	if (Crystal::Input::IsMouseButtonPressed(CRYSTAL_MOUSE_BUTTON_LEFT))
-	{
-		auto [x, y] = Crystal::Input::GetMousePosition();
-		auto width = Crystal::Application::Get().GetWindow().GetWidth();
-		auto height = Crystal::Application::Get().GetWindow().GetHeight();
-
-		auto bounds = m_CameraController.GetBounds();
-		auto pos = m_CameraController.GetCamera().GetPosition();
-		x = (x / width) * bounds.GetWidth() - bounds.GetWidth() * 0.5f;
-		y = bounds.GetHeight() * 0.5f - (y / height) * bounds.GetHeight();
-		m_Particle.Position = { x + pos.x, y + pos.y };
-		for (int i = 0; i < 5; i++)
-			m_ParticleSystem.Emit(m_Particle);
-	}
-	m_ParticleSystem.OnUpdate(ts);
-	m_ParticleSystem.OnRender(m_CameraController.GetCamera());
 }
 
 void Sandbox2D::OnImGuiRenderer()
 {
 	CRYSTAL_PROFILE_FUNCTION();
 
-	static bool dockingEnabled = true;
-	if (dockingEnabled)
-	{
-		static bool dockspaceOpen = true;
-		static bool opt_fullscreen_persistant = true;
-		bool opt_fullscreen = opt_fullscreen_persistant;
-		static ImGuiDockNodeFlags dockspace_flags = ImGuiDockNodeFlags_None;
+	ImGui::Begin("Settings");
 
-		ImGuiWindowFlags window_flags = ImGuiWindowFlags_MenuBar | ImGuiWindowFlags_NoDocking;
-		if (opt_fullscreen)
-		{
-			ImGuiViewport* viewport = ImGui::GetMainViewport();
-			ImGui::SetNextWindowPos(viewport->Pos);
-			ImGui::SetNextWindowSize(viewport->Size);
-			ImGui::SetNextWindowViewport(viewport->ID);
-			ImGui::PushStyleVar(ImGuiStyleVar_WindowRounding, 0.0f);
-			ImGui::PushStyleVar(ImGuiStyleVar_WindowBorderSize, 0.0f);
-			window_flags |= ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoMove;
-			window_flags |= ImGuiWindowFlags_NoBringToFrontOnFocus | ImGuiWindowFlags_NoNavFocus;
-		}
-		if (dockspace_flags & ImGuiDockNodeFlags_PassthruCentralNode)
-			window_flags |= ImGuiWindowFlags_NoBackground;
+	auto stats = Crystal::Renderer2D::GetStats();
+	ImGui::Text("Renderer2D Stats:");
+	ImGui::Text("Draw Calls: %d", stats.DrawCalls);
+	ImGui::Text("Quads: %d", stats.QuadCount);
+	ImGui::Text("Vertices: %d", stats.GetTotalVertexCount());
+	ImGui::Text("Indices: %d", stats.GetTotalIndexCount());
 
-		ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2(0.0f, 0.0f));
-		ImGui::Begin("DockSpace Demo", &dockspaceOpen, window_flags);
-		ImGui::PopStyleVar();
-
-		if (opt_fullscreen)
-			ImGui::PopStyleVar(2);
-
-		ImGuiIO& io = ImGui::GetIO();
-		if (io.ConfigFlags & ImGuiConfigFlags_DockingEnable)
-		{
-			ImGuiID dockspace_id = ImGui::GetID("MyDockSpace");
-			ImGui::DockSpace(dockspace_id, ImVec2(0.0f, 0.0f), dockspace_flags);
-		}
-
-		if (ImGui::BeginMenuBar())
-		{
-			if (ImGui::BeginMenu("File"))
-			{
-				if (ImGui::MenuItem("Exit")) Crystal::Application::Get().Close();
-				ImGui::EndMenu();
-			}
-			ImGui::EndMenuBar();
-		}
-		ImGui::Begin("Settings");
-
-		auto stats = Crystal::Renderer2D::GetStats();
-		ImGui::Text("Renderer2D Stats:");
-		ImGui::Text("Draw Calls: %d", stats.DrawCalls);
-		ImGui::Text("Quads: %d", stats.QuadCount);
-		ImGui::Text("Vertices: %d", stats.GetTotalVertexCount());
-		ImGui::Text("Indices: %d", stats.GetTotalIndexCount());
-
-
-		ImGui::ColorEdit4("Square Color", glm::value_ptr(m_SquareColor));
-		
-
-		uint32_t textureID = m_Framebuffer->GetColorAttachmentRendererID();
-		ImGui::Image((void*)textureID, ImVec2{ 1280,720 });
-		ImGui::End();
-		ImGui::End();
-	}
-	else
-	{
-		ImGui::Begin("Settings");
-
-		auto stats = Crystal::Renderer2D::GetStats();
-		ImGui::Text("Renderer2D Stats:");
-		ImGui::Text("Draw Calls: %d", stats.DrawCalls);
-		ImGui::Text("Quads: %d", stats.QuadCount);
-		ImGui::Text("Vertices: %d", stats.GetTotalVertexCount());
-		ImGui::Text("Indices: %d", stats.GetTotalIndexCount());
-
-
-		ImGui::ColorEdit4("Square Color", glm::value_ptr(m_SquareColor));
-
-
-		uint32_t textureID = m_CheckerboardTexture->GetRenderer();
-		ImGui::Image((void*)textureID, ImVec2{ 256.0f,256.0f });
-		ImGui::End();
-
-	}
+	ImGui::ColorEdit4("Square Color", glm::value_ptr(m_SquareColor));
+	ImGui::End();
 
 }
 

@@ -1,12 +1,17 @@
 workspace "Crystal"
-	architecture "x64"
-	startproject "Sandbox"
+	architecture "x86_64"
+	startproject "Crystal-Editor"
 
 	configurations
 	{
 		"Debug",
 		"Release",
 		"Dist"
+	}
+
+	flags
+	{
+		"MultiProcessorCompile"
 	}
 
 outputdir = "%{cfg.buildcfg}-%{cfg.system}-%{cfg.architecture}"
@@ -19,16 +24,18 @@ Includedir["ImGui"] = "Crystal/vendor/imgui"
 Includedir["glm"] = "Crystal/vendor/glm"
 Includedir["stb_image"] = "Crystal/vendor/stb_image"
 
-include "Crystal/vendor/GLFW"
-include "Crystal/vendor/Glad"
-include "Crystal/vendor/Imgui"
+group "Dependencies"
+	include "Crystal/vendor/GLFW"
+	include "Crystal/vendor/Glad"
+	include "Crystal/vendor/Imgui"
+group ""
 
 project "Crystal"
 	location "Crystal"
 	kind "StaticLib"
 	language "C++"
 	cppdialect "C++17"
-	staticruntime "on"
+	staticruntime "off"
 
 	targetdir ("bin/" .. outputdir .. "/%{prj.name}")
 	objdir    ("bin-int/" .. outputdir .. "/%{prj.name}")
@@ -48,7 +55,7 @@ project "Crystal"
 
 	defines
 	{
-		"_CRT_SECURE_NO_WARNINGS"
+		"_CRT_SECURE_NO_WARNINGS",
 		"GLFW_INCLUDE_NONE"
 	}
 
@@ -98,7 +105,54 @@ project "Sandbox"
 	kind "ConsoleApp"
 	language "C++"
 	cppdialect "C++17"
-	staticruntime "on"
+	staticruntime "off"
+
+	targetdir ("bin/" .. outputdir .. "/%{prj.name}")
+	objdir    ("bin-int/" .. outputdir .. "/%{prj.name}")
+
+	files
+	{
+		"%{prj.name}/src/**.h",
+		"%{prj.name}/src/**.cpp"
+	}
+
+	includedirs
+	{
+		"Crystal/vendor/spdlog/include",
+		"Crystal/src",
+		"Crystal/vendor",
+		"Crystal/vendor/glm"
+	}
+
+	links
+	{
+		"Crystal"
+	}
+
+	filter "system:windows"
+		systemversion "latest"
+
+	filter "configurations:Debug"
+		defines "CRYSTAL_DEBUG"
+		runtime "Debug"
+		symbols "on"
+
+	filter "configurations:Release"
+		defines "CYSTAL_RELEASE"
+		runtime "Release"
+		optimize "on"
+
+	filter "configurations:Dist"
+		defines "CYSTAL_DIST"
+		runtime "Release"
+		optimize "on"
+
+project "Crystal-Editor"
+	location "Crystal-Editor"
+	kind "ConsoleApp"
+	language "C++"
+	cppdialect "C++17"
+	staticruntime "off"
 
 	targetdir ("bin/" .. outputdir .. "/%{prj.name}")
 	objdir    ("bin-int/" .. outputdir .. "/%{prj.name}")

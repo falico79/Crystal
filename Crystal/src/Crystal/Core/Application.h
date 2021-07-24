@@ -16,7 +16,7 @@ namespace Crystal {
 	class CRYSTAL_API Application
 	{
 	public:
-		Application();
+		Application(const std::string& name = "Crystal App");
 		virtual ~Application();
 
 		void Run();
