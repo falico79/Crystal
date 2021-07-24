@@ -21,6 +21,7 @@
 
 #include "Crystal/Renderer/Buffer.h"
 #include "Crystal/Renderer/Shader.h"
+#include "Crystal/Renderer/Framebuffer.h"
 #include "Crystal/Renderer/Texture.h"
 #include "Crystal/Renderer/VertexArray.h"
 

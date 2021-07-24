@@ -60,12 +60,20 @@
 #endif // End of DLL support
 
 #ifdef CRYSTAL_DEBUG
+	#if defined(CRYSTAL_PLATFORM_WINDOWS)
+		#define CRYSTAL_DEBUGBREAK() __debugbreak()
+	#elif defined(Crystal_PLATFORM_LINUX)
+		#include <signal.h>
+		#define CRYSTAL_DEBUGBREAK() raise(SIGTRAP)
+	#else
+		#error "Platform doesn't support debug break yet1"
+	#endif
 	#define CRYSTAL_ENABLE_ASSERTS
 #endif
 
 #ifdef CRYSTAL_ENABLE_ASSERTS
-	#define CRYSTAL_CLIENT_ASSERT(x, ...) { if(!(x)) { CRYSTAL_CLIENT_ERROR("Assertion Failed: {0}", __VA_ARGS__); __debugbreak(); } }
-	#define CRYSTAL_CORE_ASSERT(x, ...) { if(!(x)) { CRYSTAL_CORE_ERROR("Assertion Failed: {0}", __VA_ARGS__); __debugbreak(); } }
+	#define CRYSTAL_CLIENT_ASSERT(x, ...) { if(!(x)) { CRYSTAL_CLIENT_ERROR("Assertion Failed: {0}", __VA_ARGS__); CRYSTAL_DEBUGBREAK(); } }
+	#define CRYSTAL_CORE_ASSERT(x, ...) { if(!(x)) { CRYSTAL_CORE_ERROR("Assertion Failed: {0}", __VA_ARGS__); CRYSTAL_DEBUGBREAK(); } }
 #else
 	#define CRYSTAL_CLIENT_ASSERT(x, ...)
 	#define CRYSTAL_CORE_ASSERT(x, ...)

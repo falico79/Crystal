@@ -49,6 +49,7 @@ project "Crystal"
 	defines
 	{
 		"_CRT_SECURE_NO_WARNINGS"
+		"GLFW_INCLUDE_NONE"
 	}
 
 	includedirs
@@ -75,8 +76,6 @@ project "Crystal"
 
 		defines
 		{
-			"CRYSTAL_BUILD_DLL",
-			"GLFW_INCLUDE_NONE"
 		}
 
 	filter "configurations:Debug"

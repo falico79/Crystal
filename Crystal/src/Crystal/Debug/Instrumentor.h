@@ -1,19 +1,23 @@
 #pragma once
 
-#include <string>
-#include <chrono>
 #include <algorithm>
+#include <chrono>
 #include <fstream>
-
+#include <iomanip>
+#include <string>
 #include <thread>
 
 namespace Crystal {
 
+    using FloatingPointMicroseconds = std::chrono::duration<double, std::micro>;
+
     struct ProfileResult
     {
         std::string Name;
-        long long Start, End;
-        uint32_t ThreadID;
+
+        FloatingPointMicroseconds Start;
+        std::chrono::microseconds ElapsedTime;
+        std::thread::id ThreadID;
     };
 
     struct InstrumentationSession
@@ -24,55 +28,83 @@ namespace Crystal {
     class Instrumentor
     {
     private:
+        std::mutex m_Mutex;
         InstrumentationSession* m_CurrentSession;
         std::ofstream m_OutputStream;
-        int m_ProfileCount;
     public:
         Instrumentor()
-            : m_CurrentSession(nullptr), m_ProfileCount(0)
+            : m_CurrentSession(nullptr)
         {
         }
 
         void BeginSession(const std::string& name, const std::string& filepath = "results.json")
         {
+            std::lock_guard lock(m_Mutex);
+            if (m_CurrentSession)
+            {
+                if (Log::GetCoreLogger())
+                {
+                    CRYSTAL_CORE_ERROR("Instrumentor::BeginSession('{0}') when session '{1}' already open.", name, m_CurrentSession->Name);
+                }
+                InternalEndSession();
+            }
             m_OutputStream.open(filepath);
-            WriteHeader();
-            m_CurrentSession = new InstrumentationSession{ name };
+
+            if (m_OutputStream.is_open())
+            {
+                WriteHeader();
+                m_CurrentSession = new InstrumentationSession{ name };
+            }
+            else
+            {
+                if (Log::GetCoreLogger())
+                {
+                    CRYSTAL_CORE_ERROR("Instrumentor could not open result file '{0}'.", filepath);
+                }
+            }
         }
 
         void EndSession()
         {
-            WriteFooter();
-            m_OutputStream.close();
-            delete m_CurrentSession;
-            m_CurrentSession = nullptr;
-            m_ProfileCount = 0;
+            std::lock_guard lock(m_Mutex);
+            InternalEndSession();
         }
+
 
         void WriteProfile(const ProfileResult& result)
         {
-            if (m_ProfileCount++ > 0)
-                m_OutputStream << ",";
+            std::stringstream json;
 
-            std::string name = result.Name;
-            std::replace(name.begin(), name.end(), '"', '\'');
+            json << std::setprecision(3) << std::fixed;
+            json << ",{";
+            json << "\"cat\":\"function\",";
+            json << "\"dur\":" << (result.ElapsedTime.count()) << ',';
+            json << "\"name\":\"" << result.Name << "\",";
+            json << "\"ph\":\"X\",";
+            json << "\"pid\":0,";
+            json << "\"tid\":" << result.ThreadID << ",";
+            json << "\"ts\":" << result.Start.count();
+            json << "}";
 
-            m_OutputStream << "{";
-            m_OutputStream << "\"cat\":\"function\",";
-            m_OutputStream << "\"dur\":" << (result.End - result.Start) << ',';
-            m_OutputStream << "\"name\":\"" << name << "\",";
-            m_OutputStream << "\"ph\":\"X\",";
-            m_OutputStream << "\"pid\":0,";
-            m_OutputStream << "\"tid\":" << result.ThreadID << ",";
-            m_OutputStream << "\"ts\":" << result.Start;
-            m_OutputStream << "}";
-
-            m_OutputStream.flush();
+            std::lock_guard lock(m_Mutex);
+            if (m_CurrentSession)
+            {
+                m_OutputStream << json.str();
+                m_OutputStream.flush();
+            }
         }
+
+        static Instrumentor& Get()
+        {
+            static Instrumentor instance;
+            return instance;
+        }
+
+    private:
 
         void WriteHeader()
         {
-            m_OutputStream << "{\"otherData\": {},\"traceEvents\":[";
+            m_OutputStream << "{\"otherData\": {},\"traceEvents\":[{}";
             m_OutputStream.flush();
         }
 
@@ -82,10 +114,15 @@ namespace Crystal {
             m_OutputStream.flush();
         }
 
-        static Instrumentor& Get()
+        void InternalEndSession()
         {
-            static Instrumentor instance;
-            return instance;
+            if (m_CurrentSession)
+            {
+                WriteFooter();
+                m_OutputStream.close();
+                delete m_CurrentSession;
+                m_CurrentSession = nullptr;
+            }
         }
     };
 
@@ -95,7 +132,7 @@ namespace Crystal {
         InstrumentationTimer(const char* name)
             : m_Name(name), m_Stopped(false)
         {
-            m_StartTimepoint = std::chrono::high_resolution_clock::now();
+            m_StartTimepoint = std::chrono::steady_clock::now();
         }
 
         ~InstrumentationTimer()
@@ -106,29 +143,76 @@ namespace Crystal {
 
         void Stop()
         {
-            auto endTimepoint = std::chrono::high_resolution_clock::now();
+            auto endTimepoint = std::chrono::steady_clock::now();
+            auto highResStart = FloatingPointMicroseconds{ m_StartTimepoint.time_since_epoch().count() };
+            auto elapsedTime =
+                std::chrono::time_point_cast<std::chrono::microseconds>(endTimepoint).time_since_epoch() -
+                std::chrono::time_point_cast<std::chrono::microseconds>(m_StartTimepoint).time_since_epoch();
 
-            long long start = std::chrono::time_point_cast<std::chrono::microseconds>(m_StartTimepoint).time_since_epoch().count();
-            long long end = std::chrono::time_point_cast<std::chrono::microseconds>(endTimepoint).time_since_epoch().count();
-
-            uint32_t threadID = std::hash<std::thread::id>{}(std::this_thread::get_id());
-            Instrumentor::Get().WriteProfile({ m_Name, start, end, threadID });
+            Instrumentor::Get().WriteProfile({ m_Name, highResStart, elapsedTime, std::this_thread::get_id() });
 
             m_Stopped = true;
         }
     private:
         const char* m_Name;
-        std::chrono::time_point<std::chrono::high_resolution_clock> m_StartTimepoint;
+        std::chrono::time_point<std::chrono::steady_clock> m_StartTimepoint;
         bool m_Stopped;
     };
+
+    namespace InstrumentorUtils {
+        template <size_t N>
+        struct ChangeResult
+        {
+            char Data[N];
+        };
+
+        template <size_t N, size_t K>
+        constexpr auto CleanupOutputString(const char(&expr)[N], const char(&remove)[K])
+        {
+            ChangeResult<N> result = {};
+
+            size_t srcIndex = 0;
+            size_t dstIndex = 0;
+            while (srcIndex < N)
+            {
+                size_t matchIndex = 0;
+                while (matchIndex < K - 1 && srcIndex + matchIndex < N - 1 && expr[srcIndex + matchIndex] == remove[matchIndex])
+                    matchIndex++;
+                if (matchIndex == K - 1)
+                    srcIndex += matchIndex;
+                result.Data[dstIndex++] = expr[srcIndex] == '"' ? '\'' : expr[srcIndex];
+                srcIndex++;
+            }
+            return result;
+        }
+    }
 }
 
-#define CRYSTAL_PROFILE 1
+#define CRYSTAL_PROFILE 0
 #if CRYSTAL_PROFILE
+
+    #if defined(__GNUC__)||(defined(__MWERKS__) && (__MWERKS__ >= 0x3000)) || (defined(__ICC) && (__ICC >= 600)) || defined(__ghs__)
+        #define CRYSTAL_FUNC_SIG __PRETTY_FUNCTION__
+    #elif defined(__DMC__) && (__DMC__ >= 0x810)
+        #define CRYSTAL_FUNC_SIG __PRETTY_FUNCTION__
+    #elif (defined(__FUNCSIG__) || (_MSC_VER))
+        #define CRYSTAL_FUNC_SIG __FUNCSIG__
+    #elif (defined(__INTEL_COMPILER) && (__INTEL_COMPILER >= 600)) || (defined(__IBMCPP__) && (__IBMCPP__ >= 500))
+        #define CRYSTAL_FUNC_SIG __FUNCTION__
+    #elif defined(__BORLANDC__) && (__BORLANDC__ >= 0x550)
+        #define CRYSTAL_FUNC_SIG __FUNC__
+    #elif defined(__STDC_VERSION__) && (__STDC_VERSION__ >= 199901)
+        #define CRYSTAL_FUNC_SIG __func__
+    #elif defined(__cplusplus) && (__cplusplus >= 201103)
+        #define CRYSTAL_FUNC_SIG __func__
+    #else
+        #define CRYSTAL_FUNC_SIG "CRYSTAL_FUNC_SIG unknown!"
+    #endif
     #define CRYSTAL_PROFILE_BEGIN_SESSION(name, filepath) ::Crystal::Instrumentor::Get().BeginSession(name, filepath)
     #define CRYSTAL_PROFILE_END_SESSION() ::Crystal::Instrumentor::Get().EndSession()
-    #define CRYSTAL_PROFILE_SCOPE(name) ::Crystal::InstrumentationTimer timer##__LINE__(name);
-    #define CRYSTAL_PROFILE_FUNCTION() CRYSTAL_PROFILE_SCOPE(__FUNCSIG__)
+    #define CRYSTAL_PROFILE_SCOPE(name) constexpr auto fixedName = ::Crystal::InstrumentorUtils::CleanupOutputString(name,"__cdecl ");\
+                                                                   ::Crystal::InstrumentationTimer timer##__LINE__(name);
+    #define CRYSTAL_PROFILE_FUNCTION() CRYSTAL_PROFILE_SCOPE(CRYSTAL_FUNC_SIG)
 #else
     #define CRYSTAL_PROFILE_BEGIN_SESSION(name, filepath)
     #define CRYSTAL_PROFILE_END_SESSION()
