@@ -1,16 +1,15 @@
 #include "crystalpch.h"
-#include "Application.h"
+#include "Crystal/Core/Application.h"
 
 #include "Crystal/Core/Log.h"
 
-#include "Input.h"
 #include "Crystal/Renderer/Renderer.h"
+
+#include "Crystal/Core/Input.h"
 
 #include <GLFW/glfw3.h>
 
 namespace Crystal {
-
-#define BIND_EVENT_FN(x) std::bind(&Application::x, this, std::placeholders::_1)
 
 	Application* Application::s_Instance = nullptr;
 
@@ -23,7 +22,7 @@ namespace Crystal {
 		s_Instance = this;
 
 		m_Window = std::unique_ptr<Window>(Window::Create(WindowProps(name)));
-		m_Window->SetEventCallback(BIND_EVENT_FN(OnEvent));
+		m_Window->SetEventCallback(CRYSTAL_BIND_EVENT_FN(Application::OnEvent));
 
 		Renderer::Init();
 
@@ -62,8 +61,8 @@ namespace Crystal {
 		CRYSTAL_PROFILE_FUNCTION();
 
 		EventDispatcher dispatcher(e);
-		dispatcher.Dispatch<WindowCloseEvent>(BIND_EVENT_FN(OnWindowClose));
-		dispatcher.Dispatch<WindowResizeEvent>(BIND_EVENT_FN(OnWindowResize));
+		dispatcher.Dispatch<WindowCloseEvent>(CRYSTAL_BIND_EVENT_FN(Application::OnWindowClose));
+		dispatcher.Dispatch<WindowResizeEvent>(CRYSTAL_BIND_EVENT_FN(Application::OnWindowResize));
 
 		CRYSTAL_CORE_TRACE("{0}", e);
 

@@ -1,15 +1,17 @@
 #pragma once
 
-#include "Core.h"
+#include "Crystal/Core/Core.h"
 
-#include "Window.h"
+#include "Crystal/Core/Window.h"
 #include "Crystal/Core/LayerStack.h"
 #include "Crystal/Events/Event.h"
 #include "Crystal/Events/ApplicationEvent.h"
 
+#include "Crystal/Core/Timestep.h"
+
 #include "Crystal/ImGui/ImGuiLayer.h"
 
-#include "Crystal/Core/Timestep.h"
+int main(int argc, char** argv);
 
 namespace Crystal {
 
@@ -19,18 +21,18 @@ namespace Crystal {
 		Application(const std::string& name = "Crystal App");
 		virtual ~Application();
 
-		void Run();
-
 		void OnEvent(Event& e);
 
 		void PushLayer(Layer* layer);
 		void PushOverlay(Layer* overlay);
 
+		Window& GetWindow() { return *m_Window; }
+
 		void Close();
 
-		Window& GetWindow() { return *m_Window; }
 		static Application& Get() { return *s_Instance; }
 	private:
+		void Run();
 		bool OnWindowClose(WindowCloseEvent& e);
 		bool OnWindowResize(WindowResizeEvent& e);
 	private:
@@ -43,6 +45,7 @@ namespace Crystal {
 
 	private:
 		static Application* s_Instance;
+		friend int ::main(int argc, char** argv);
 	};
 
 	Application* CreateApplication();
