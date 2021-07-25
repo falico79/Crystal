@@ -27,6 +27,7 @@ namespace Crystal {
 		Ref<Crystal::Texture2D> m_CheckerboardTexture;
 		Ref<Crystal::Texture2D> m_SpriteSheet;
 
+		bool m_ViewportFocused = false, m_ViewportHovered = false;
 		glm::vec2 m_ViewportSize;
 		glm::vec4 m_SquareColor;
 

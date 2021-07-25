@@ -9,8 +9,6 @@
 #include "Crystal/Core/Timestep.h"
 
 #include "Crystal/Core/Input.h"
-#include "Crystal/Core/KeyCodes.h"
-#include "Crystal/Core/MouseButtonCodes.h"
 #include "Crystal/Renderer/OrthographicCameraController.h"
 
 #include "Crystal/ImGui/ImGuiLayer.h"
