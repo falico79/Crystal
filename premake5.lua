@@ -23,6 +23,7 @@ Includedir["Glad"] = "Crystal/vendor/Glad/include"
 Includedir["ImGui"] = "Crystal/vendor/imgui"
 Includedir["glm"] = "Crystal/vendor/glm"
 Includedir["stb_image"] = "Crystal/vendor/stb_image"
+Includedir["entt"] = "Crystal/vendor/entt/include"
 
 group "Dependencies"
 	include "Crystal/vendor/GLFW"
@@ -67,7 +68,8 @@ project "Crystal"
 		"%{Includedir.Glad}",
 		"%{Includedir.ImGui}",
 		"%{Includedir.stb_image}",
-		"%{Includedir.glm}"
+		"%{Includedir.glm}",
+		"%{Includedir.entt}"
 	}
 
 	links
@@ -168,7 +170,8 @@ project "Crystal-Editor"
 		"Crystal/vendor/spdlog/include",
 		"Crystal/src",
 		"Crystal/vendor",
-		"Crystal/vendor/glm"
+		"%{Includedir.glm}",
+		"%{Includedir.entt}"
 	}
 
 	links

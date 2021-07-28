@@ -24,6 +24,9 @@ namespace Crystal {
 		Ref<Crystal::Shader> m_FlatColorShader;
 		Ref<Crystal::Framebuffer> m_Framebuffer;
 
+		Ref<Scene> m_ActiveScene;
+		entt::entity m_SquareEntity;
+
 		Ref<Crystal::Texture2D> m_CheckerboardTexture;
 		Ref<Crystal::Texture2D> m_SpriteSheet;
 

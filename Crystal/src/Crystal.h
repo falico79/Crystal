@@ -13,6 +13,9 @@
 
 #include "Crystal/ImGui/ImGuiLayer.h"
 
+#include "Crystal/Scene/Scene.h"
+#include "Crystal/Scene/Components.h"
+
 #include "Crystal/Renderer/Renderer.h"
 #include "Crystal/Renderer/Renderer2D.h"
 #include "Crystal/Renderer/RenderCommand.h"
