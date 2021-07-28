@@ -27,15 +27,9 @@ namespace Crystal {
 
     class Instrumentor
     {
-    private:
-        std::mutex m_Mutex;
-        InstrumentationSession* m_CurrentSession;
-        std::ofstream m_OutputStream;
     public:
-        Instrumentor()
-            : m_CurrentSession(nullptr)
-        {
-        }
+        Instrumentor(const Instrumentor&) = delete;
+        Instrumentor(Instrumentor&&) = delete;
 
         void BeginSession(const std::string& name, const std::string& filepath = "results.json")
         {
@@ -101,6 +95,15 @@ namespace Crystal {
         }
 
     private:
+        Instrumentor()
+            : m_CurrentSession(nullptr)
+        {
+        }
+
+        ~Instrumentor()
+        {
+            EndSession();
+        }
 
         void WriteHeader()
         {
@@ -124,6 +127,10 @@ namespace Crystal {
                 m_CurrentSession = nullptr;
             }
         }
+    private:
+        std::mutex m_Mutex;
+        InstrumentationSession* m_CurrentSession;
+        std::ofstream m_OutputStream;
     };
 
     class InstrumentationTimer
@@ -210,8 +217,10 @@ namespace Crystal {
     #endif
     #define CRYSTAL_PROFILE_BEGIN_SESSION(name, filepath) ::Crystal::Instrumentor::Get().BeginSession(name, filepath)
     #define CRYSTAL_PROFILE_END_SESSION() ::Crystal::Instrumentor::Get().EndSession()
-    #define CRYSTAL_PROFILE_SCOPE(name) constexpr auto fixedName = ::Crystal::InstrumentorUtils::CleanupOutputString(name,"__cdecl ");\
-                                                                   ::Crystal::InstrumentationTimer timer##__LINE__(name);
+#define CRYSTAL_PROFILE_SCOPE_LINE2(name, line) constexpr auto fixedName##line = ::Crystal::InstrumentorUtils::CleanupOutputString(name,"__cdecl ");\
+                                                                   ::Crystal::InstrumentationTimer timer##line(fixedName##line.Data);
+    #define CRYSTAL_PROFILE_SCOPE_LINE(name, line) CRYSTAL_PROFILE_SCOPE_LINE2(name, line)
+    #define CRYSTAL_PROFILE_SCOPE(name) CRYSTAL_PROFILE_SCOPE_LINE(name, __LINE__)
     #define CRYSTAL_PROFILE_FUNCTION() CRYSTAL_PROFILE_SCOPE(CRYSTAL_FUNC_SIG)
 #else
     #define CRYSTAL_PROFILE_BEGIN_SESSION(name, filepath)

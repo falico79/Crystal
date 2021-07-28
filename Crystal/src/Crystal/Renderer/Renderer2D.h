@@ -1,7 +1,8 @@
 #pragma once
 
-#include "OrthographicCamera.h"
-#include "Texture.h"
+#include "Crystal/Renderer/OrthographicCamera.h"
+#include "Crystal/Renderer/Texture.h"
+#include "Crystal/Renderer/Camera.h"
 
 namespace Crystal {
 
@@ -11,7 +12,8 @@ namespace Crystal {
 		static void Init();
 		static void Shutdown();
 
-		static void BeginScene(const OrthographicCamera& camera);
+		static void BeginScene(const Camera& camera, const glm::mat4 transform);
+		static void BeginScene(const OrthographicCamera& camera); // TODO: Remove
 		static void EndScene();
 		static void Flush();
 
