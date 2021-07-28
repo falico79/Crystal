@@ -100,7 +100,7 @@ namespace Crystal {
 							ShaderDataTypeToOpenGLBaseType(element.Type),
 							element.Normalized ? GL_TRUE : GL_FALSE,
 							layout.GetStride(),
-							(const void*)(sizeof(float) * count * i));
+							(const void*)(element.Offset + sizeof(float) * count * i));
 						index++;
 					}
 					break;

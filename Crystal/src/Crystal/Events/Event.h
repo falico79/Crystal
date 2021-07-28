@@ -1,7 +1,8 @@
 #pragma once
 
-#include "crystalpch.h"
+#include <functional>
 
+#include "Crystal/Debug/Instrumentor.h"
 #include "Crystal/Core/Core.h"
 
 namespace Crystal {

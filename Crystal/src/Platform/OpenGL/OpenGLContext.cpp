@@ -24,14 +24,7 @@ namespace Crystal {
 		CRYSTAL_CORE_INFO("  Renderer: {0}", glGetString(GL_RENDERER));
 		CRYSTAL_CORE_INFO("  Version: {0}", glGetString(GL_VERSION));
 
-		#ifdef CRYSTAL_ENABLE_ASSERTS
-			int versionMajor;
-			int versionMinor;
-			glGetIntegerv(GL_MAJOR_VERSION, &versionMajor);
-			glGetIntegerv(GL_MINOR_VERSION, &versionMinor);
-
-			CRYSTAL_CORE_ASSERT(versionMajor > 4 || (versionMajor == 4 && versionMinor >= 5), "Crystal requires at least OpenGL version 4.5!");
-		#endif
+		CRYSTAL_CORE_ASSERT(GLVersion.major > 4 || (GLVersion.major == 4 && GLVersion.minor >= 5), "Crystal requires at least OpenGL version 4.5!");
 	}
 
 	void OpenGLContext::SwapBuffers()

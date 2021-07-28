@@ -1,5 +1,13 @@
 #pragma once
 
+#include "Crystal/Core/PlatformDetection.h"
+
+#ifdef CRYSTAL_PLATFORM_WINDOWS
+	#ifndef NOMINMAX
+		#define NOMINMAX
+	#endif // !NOMINMAX
+#endif
+
 #include <iostream>
 #include <memory>
 #include <utility>
@@ -12,6 +20,8 @@
 #include <vector>
 #include <unordered_map>
 #include <unordered_set>
+
+#include "Crystal/Core/Core.h"
 
 #include "Crystal/Core/Log.h"
 #include "Crystal/Debug/Instrumentor.h"
