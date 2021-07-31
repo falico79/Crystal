@@ -1,6 +1,7 @@
 #pragma once
 
 #include "Crystal.h"
+#include "Panels/SceneHierarchyPanel.h"
 
 namespace Crystal {
 
@@ -38,5 +39,7 @@ namespace Crystal {
 		glm::vec2 m_ViewportSize;
 		glm::vec4 m_SquareColor;
 
+		//Panels
+		SceneHierarchyPanel m_SceneHierarchyPanel;
 	};
 }
