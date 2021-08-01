@@ -31,13 +31,8 @@
 	#define CRYSTAL_ENABLE_ASSERTS
 #endif
 
-#ifdef CRYSTAL_ENABLE_ASSERTS
-	#define CRYSTAL_CLIENT_ASSERT(x, ...) { if(!(x)) { CRYSTAL_CLIENT_ERROR("Assertion Failed: {0}", __VA_ARGS__); CRYSTAL_DEBUGBREAK(); } }
-	#define CRYSTAL_CORE_ASSERT(x, ...) { if(!(x)) { CRYSTAL_CORE_ERROR("Assertion Failed: {0}", __VA_ARGS__); CRYSTAL_DEBUGBREAK(); } }
-#else
-	#define CRYSTAL_CLIENT_ASSERT(x, ...)
-	#define CRYSTAL_CORE_ASSERT(x, ...)
-#endif
+#define CRYSTAL_EXPAND_MACRO(x) x
+#define CRYSTAL_STRINGIFY_MACRO(x) #x
 
 #define BIT(x) (1 << x)
 
@@ -62,3 +57,6 @@ namespace Crystal {
 	}
 
 }
+
+#include "Crystal/Core/Log.h"
+#include "Crystal/Core/Assert.h"

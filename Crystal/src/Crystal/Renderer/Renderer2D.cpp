@@ -124,10 +124,7 @@ namespace Crystal {
 		s_Data.TextureShader->Bind();
 		s_Data.TextureShader->SetMat4("u_ViewProjection", viewProj);
 
-		s_Data.QuadIndexCount = 0;
-		s_Data.QuadVertexBufferPtr = s_Data.QuadVertexBufferBase;
-
-		s_Data.TextureSlotIndex = 1;
+		StartBatch();
 	}
 
 	void Renderer2D::BeginScene(const OrthographicCamera& camera)
@@ -137,19 +134,13 @@ namespace Crystal {
 		s_Data.TextureShader->Bind();
 		s_Data.TextureShader->SetMat4("u_ViewProjection", camera.GetViewProjectionMatrix());
 
-
-		s_Data.QuadIndexCount = 0;
-		s_Data.QuadVertexBufferPtr = s_Data.QuadVertexBufferBase;
-
-		s_Data.TextureSlotIndex = 1;
+		StartBatch();
 	}
 
 	void Renderer2D::EndScene()
 	{
 		CRYSTAL_PROFILE_FUNCTION();
 
-		uint32_t dataSize = (uint32_t)((uint8_t*)s_Data.QuadVertexBufferPtr - (uint8_t*)s_Data.QuadVertexBufferBase);
-		s_Data.QuadVertexBuffer->SetData(s_Data.QuadVertexBufferBase, dataSize);
 
 		Flush();
 	}
@@ -161,6 +152,9 @@ namespace Crystal {
 		if (s_Data.QuadIndexCount == 0)
 			return;
 
+		uint32_t dataSize = (uint32_t)((uint8_t*)s_Data.QuadVertexBufferPtr - (uint8_t*)s_Data.QuadVertexBufferBase);
+		s_Data.QuadVertexBuffer->SetData(s_Data.QuadVertexBufferBase, dataSize);
+
 		for (uint32_t i = 0; i < s_Data.TextureSlotIndex; i++)
 		{
 			s_Data.TextureSlots[i]->Bind(i);
@@ -169,15 +163,18 @@ namespace Crystal {
 		s_Data.Stats.DrawCalls++;
 	}
 
-	void Renderer2D::FlushAndReset()
+	void Renderer2D::NextBatch()
 	{
-		EndScene();
+		Flush();
+		StartBatch();
+	}
 
+	void Renderer2D::StartBatch()
+	{
 		s_Data.QuadIndexCount = 0;
 		s_Data.QuadVertexBufferPtr = s_Data.QuadVertexBufferBase;
 
 		s_Data.TextureSlotIndex = 1;
-
 	}
 
 	void Renderer2D::DrawQuad(const glm::vec2& position, const glm::vec2& size, const glm::vec4& color)
@@ -220,7 +217,7 @@ namespace Crystal {
 		const float tilingFactor = 1.0f;
 
 		if (s_Data.QuadIndexCount >= Renderer2DData::MaxIndices)
-			FlushAndReset();
+			NextBatch();
 
 		for (size_t i = 0; i < quadVertexCount; i++)
 		{
@@ -245,7 +242,7 @@ namespace Crystal {
 		constexpr glm::vec2 textureCoords[] = { {0.0f, 0.0f},{1.0f, 0.0f}, {1.0f, 1.0f},{0.0f, 1.0f} };
 
 		if (s_Data.QuadIndexCount >= Renderer2DData::MaxIndices)
-			FlushAndReset();
+			NextBatch();
 
 		float textureIndex = 0.0f;
 
@@ -261,7 +258,7 @@ namespace Crystal {
 		if (textureIndex == 0.0f)
 		{
 			if (s_Data.TextureSlotIndex >= Renderer2DData::MaxTextureSlots)
-				FlushAndReset();
+				NextBatch();
 
 			textureIndex = (float)s_Data.TextureSlotIndex;
 			s_Data.TextureSlots[s_Data.TextureSlotIndex] = texture;
